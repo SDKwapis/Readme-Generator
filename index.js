@@ -1,6 +1,8 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 
+
+
 inquirer
   .prompt([
     {
@@ -15,7 +17,7 @@ inquirer
     {
       type: 'input',
       message: '\nWhat steps should be followed to install your project?\n',
-      name: 'instalation'
+      name: 'installation'
     },
     {
       type: 'input',
@@ -31,7 +33,7 @@ inquirer
       type: 'list',
       message: '\nWhich license did you choose for your project?',
       name: 'license',
-      choices: ['MIT', 'Apache License 2.0', 'GNU GPLv3', 'ISC']
+      choices: ['MIT', 'Apache License 2.0', 'GNU GPLv3', 'Attribution License']
     },
     {
       type: 'input',
@@ -49,27 +51,69 @@ inquirer
       name: 'email'
     }
   ])
-  .then((response) =>
-    fs.writeFile('README.md', 
-    `# Description
-    ${response.description}
-    # Instalation
-    ${response.instalation}
-    # Usage
-    ${response.useage}
-    # Contributors
-    ${response.contributors}
-    # License
-    ${response.license}
-    # Tests
-    ${response.tests}
-    # Contact
-    [GitHub Profile](https://github.com/${response.contact})
-    ${response.email}`,
-    (err) => {
-      err ? console.error(err) : console.log('Log Created!')
+  .then((responses) => {
+
+    const badges = () => {
+      let newBadge = `${responses.license}`;
+      if(newBadge === 'MIT') {
+        return '[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)'
+      } else if (newBadge === 'Apache License 2.0') {
+        return '[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)'
+      } else if (newBadge === 'GNU GPLv3') {
+        return '[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)'
+      } else if (newBadge === 'Attribution License') {
+        return '[![License: Open Data Commons Attribution](https://img.shields.io/badge/License-ODC_BY-brightgreen.svg)](https://opendatacommons.org/licenses/by/)'
+      } else {
+        return 'No License Found'
+      };
     }
-  ));
+    
+    const content = `
+# Table Of Contents
+- [Description](#description)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributors](#contributors)
+- [License](#license)
+- [Tests](#tests)
+- [Contact](#contact)
+
+\t${badges()}
+
+# Description
+${responses.description}
+
+# Installation
+${responses.installation}
+
+# Usage
+${responses.usage}
+
+# Contributors
+${responses.contributors}
+
+# License
+${responses.license}
+
+# Tests
+${responses.tests}
+
+# Contact
+[GitHub Profile](https://github.com/${responses.contact})
+${responses.email}`;
+
+    fs.writeFile('README.md', content, (err) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log('Read Me Created!');
+      }
+    });
+  });
+
+
+
+
 
 
   
