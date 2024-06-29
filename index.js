@@ -1,4 +1,5 @@
 const inquirer = require('inquirer');
+const fs = require('fs');
 
 inquirer
   .prompt([
@@ -8,43 +9,67 @@ inquirer
     },
     {
       type: 'input',
-      message: '\nFirst, lets write a short description explaining your project. Consider these questions:/n-What was your motivation?\n-Why did you build this?\n-What problems are you solving?\n-What did you learn along the way?\n',
-      name: '## Description'
+      message: '\nFirst, lets write a short description explaining your project. Consider these questions:\n-What was your motivation?\n-Why did you build this?\n-What problems are you solving?\n-What did you learn along the way?\n',
+      name: 'description'
     },
     {
       type: 'input',
       message: '\nWhat steps should be followed to install your project?\n',
-      name: '## Instalation'
+      name: 'instalation'
     },
     {
       type: 'input',
       message: '\nProvide detailed instructions and examples for use of your project\n',
-      name: '## Usage'
+      name: 'usage'
     },
     {
       type: 'input',
       message: '\nList your collaborators! Add links to their Github profiles.\nIf you used any third-party assets or followed tutorials\nbe sure to add those attributions here as well.\n',
-      name: '## Contributors'
+      name: 'contributors'
     },
     {
       type: 'list',
       message: '\nWhich license did you choose for your project?',
-      name: '## License',
+      name: 'license',
       choices: ['MIT', 'Apache License 2.0', 'GNU GPLv3', 'ISC']
     },
     {
       type: 'input',
       message: '\nProvide examples of the tests you created for your application and how to run them.\n',
-      name: '## Tests'
+      name: 'tests'
     },
     {
       type: 'input',
       message: '\nEnter your GitHub username\n',
-      name: '## Questions1'
+      name: 'contact'
     },
     {
       type: 'input',
       message: '\nEnter your email address\n',
-      name: '## Questions2'
+      name: 'email'
     }
-  ]);
+  ])
+  .then((response) =>
+    fs.writeFile('README.md', 
+    `# Description
+    ${response.description}
+    # Instalation
+    ${response.instalation}
+    # Usage
+    ${response.useage}
+    # Contributors
+    ${response.contributors}
+    # License
+    ${response.license}
+    # Tests
+    ${response.tests}
+    # Contact
+    [GitHub Profile](https://github.com/${response.contact})
+    ${response.email}`,
+    (err) => {
+      err ? console.error(err) : console.log('Log Created!')
+    }
+  ));
+
+
+  
