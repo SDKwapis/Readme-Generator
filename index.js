@@ -1,53 +1,57 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
-
-
+const colors = require("colors");
 
 inquirer
   .prompt([
     {
-      message: '\nHello there! Welcome to the world of Read Me!\nMy name is Dr. ReadMe and I help people create unique and professional Read Me files.\nPlease press ENTER to continue...',
+      message: colors.brightMagenta('\nHello there! Welcome to the world of Read Me!\nMy name is Dr. ReadMe and I help people create unique and professional Read Me files.\nPlease press ENTER to continue...'),
       name: 'enterKey'
     },
     {
       type: 'input',
-      message: '\nFirst, lets write a short description explaining your project. Consider these questions:\n-What was your motivation?\n-Why did you build this?\n-What problems are you solving?\n-What did you learn along the way?\n',
+      message: colors.brightMagenta('\nFirst, what is the name of your project?\n'),
+      name: 'name'
+    },
+    {
+      type: 'input',
+      message: colors.brightMagenta('\nNow lets write a short description explaining your project. Consider these questions:\n-What was your motivation?\n-Why did you build this?\n-What problems are you solving?\n-What did you learn along the way?\n'),
       name: 'description'
     },
     {
       type: 'input',
-      message: '\nWhat steps should be followed to install your project?\n',
+      message: colors.brightMagenta('\nWhat steps should be followed to install your project?\n'),
       name: 'installation'
     },
     {
       type: 'input',
-      message: '\nProvide detailed instructions and examples for use of your project\n',
+      message: colors.brightMagenta('\nProvide detailed instructions and examples for use of your project\n'),
       name: 'usage'
     },
     {
       type: 'input',
-      message: '\nList your collaborators! Add links to their Github profiles.\nIf you used any third-party assets or followed tutorials\nbe sure to add those attributions here as well.\n',
+      message: colors.brightMagenta('\nList your collaborators! Add links to their Github profiles.\nIf you used any third-party assets or followed tutorials\nbe sure to add those attributions here as well.\n'),
       name: 'contributors'
     },
     {
       type: 'list',
-      message: '\nWhich license did you choose for your project?',
+      message: colors.brightMagenta('\nWhich license did you choose for your project?'),
       name: 'license',
       choices: ['MIT', 'Apache License 2.0', 'GNU GPLv3', 'Attribution License']
     },
     {
       type: 'input',
-      message: '\nProvide examples of the tests you created for your application and how to run them.\n',
+      message: colors.brightMagenta('\nProvide examples of the tests you created for your application and how to run them.\n'),
       name: 'tests'
     },
     {
       type: 'input',
-      message: '\nEnter your GitHub username\n',
+      message: colors.brightMagenta('\nEnter your GitHub username\n'),
       name: 'contact'
     },
     {
       type: 'input',
-      message: '\nEnter your email address\n',
+      message: colors.brightMagenta('\nEnter your email address\n'),
       name: 'email'
     }
   ])
@@ -67,18 +71,21 @@ inquirer
         return 'No License Found'
       };
     }
-    
+
     const content = `
-# Table Of Contents
+
+# ${responses.name} \t ${badges()} 
+
+## Table Of Contents
 - [Description](#description)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Contributors](#contributors)
+- [Contributing](#contributing)
 - [License](#license)
 - [Tests](#tests)
-- [Contact](#contact)
+- [Questions](#questions)
 
-\t${badges()}
+
 
 # Description
 ${responses.description}
@@ -89,7 +96,7 @@ ${responses.installation}
 # Usage
 ${responses.usage}
 
-# Contributors
+# Contributing
 ${responses.contributors}
 
 # License
@@ -98,11 +105,11 @@ ${responses.license}
 # Tests
 ${responses.tests}
 
-# Contact
+# Questions
 [GitHub Profile](https://github.com/${responses.contact})
-${responses.email}`;
+For questions or comments please reach out to me at: ${responses.email}`;
 
-    fs.writeFile('README.md', content, (err) => {
+    fs.writeFile(`${responses.name}.md`, content, (err) => {
       if (err) {
         console.error(err);
       } else {
